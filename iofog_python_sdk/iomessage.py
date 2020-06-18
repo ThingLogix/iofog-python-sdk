@@ -63,19 +63,19 @@ class IoMessage:
         # sequence number
         byte_num, byte_num_len = num_to_bytearray(self.sequencenumber)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # sequence total
         byte_num, byte_num_len = num_to_bytearray(self.sequencetotal)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # priority
         byte_num, byte_num_len = num_to_bytearray(self.priority)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # timestamp
         byte_num, byte_num_len = num_to_bytearray(self.timestamp)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # publisher
         header.extend(pack('>B', len(self.publisher)))
         body.extend(self.publisher.encode())
@@ -88,7 +88,7 @@ class IoMessage:
         # chain position
         byte_num, byte_num_len = num_to_bytearray(self.chainposition)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # hash
         header.extend(pack('>H', len(self.hash)))
         body.extend(self.hash.encode())
@@ -101,7 +101,7 @@ class IoMessage:
         # difficulty target
         byte_num, byte_num_len = num_to_bytearray(self.difficultytarget)
         header.extend(pack('>B', byte_num_len))
-        body.extend(byte_num.encode())
+        body.extend(byte_num)
         # info type
         header.extend(pack('>B', len(self.infotype)))
         body.extend(self.infotype.encode())
@@ -139,19 +139,23 @@ class IoMessage:
         data_offset += field_len
         # sequence number
         field_len = bytes[6]
-        msg.sequencenumber = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.sequencenumber = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # sequence total
         field_len = bytes[7]
-        msg.sequencetotal = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.sequencetotal = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # priority
         field_len = bytes[8]
-        msg.priority = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.priority = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # timestamp
         field_len = bytes[9]
-        msg.timestamp = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.timestamp = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # publisher
         field_len = bytes[10]
@@ -167,7 +171,8 @@ class IoMessage:
         data_offset += field_len
         # chain position
         field_len = bytes[15]
-        msg.chainposition = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.chainposition = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # hash
         field_len = unpack('>H', bytes[16:18])[0]
@@ -183,7 +188,8 @@ class IoMessage:
         data_offset += field_len
         # difficulty target
         field_len = bytes[22]
-        msg.difficultytarget = bytearray_to_num(bytes[data_offset: data_offset + field_len])
+        msg.difficultytarget = bytearray_to_num(
+            bytes[data_offset: data_offset + field_len])
         data_offset += field_len
         # info type
         field_len = bytes[23]
@@ -227,10 +233,10 @@ class IoMessage:
         msg.infoformat = json_msg.get(INFO_FORMAT, '')
         contextdata = json_msg.get(CONTEXT_DATA, '')
         contextdata = base64.b64decode(contextdata)
-        msg.contextdata = str.encode(contextdata)
+        msg.contextdata = str(contextdata, 'utf-8')
         contentdata = json_msg.get(CONTENT_DATA, '')
         contentdata = base64.b64decode(contentdata)
-        msg.contentdata = str.encode(contentdata)
+        msg.contentdata = str(contentdata, 'utf-8')
         return msg
 
     def to_json(self):
